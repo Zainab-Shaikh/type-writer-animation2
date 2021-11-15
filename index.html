@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>text-animation</title>
+    <style>
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 0px 8px;
+        grid-template-areas:
+          ". . . ."
+          "static-text static-text dynamic-text dynamic-text"
+          ". . . .";
+      }
+      .static-text {
+        margin-top: 11px;
+        text-align: right;
+        grid-area: static-text;
+      }
+
+      div {
+        display: inline-block;
+        grid-area: dynamic-text;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+      }
+      .inline-cursor {
+        display: inline-block;
+        width: 2px;
+        height: 18px;
+        background-color: black;
+        animation: blink 0.2s linear infinite alternate;
+      }
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        40% {
+          opacity: 1;
+        }
+        60% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="grid-container">
+      <section class="static-text">I am a</section>
+      <div>
+        <span class="dynamic-text"></span>
+        <span class="inline-cursor"></span>
+      </div>
+    </section>
+    <script>
+      const textElement = document.querySelector(".dynamic-text");
+      const names = ["Front-end developer", "Coder", "UI designer"];
+
+      const typingDelay = 100;
+      const deletingDelay = 50;
+      const newWordDelay = 900;
+
+      let charIndex = 0;
+      let index = 0;
+
+      function showAnimatedText() {
+        if (charIndex <= names[index].length) {
+          textElement.textContent = names[index].slice(0, charIndex);
+          charIndex++;
+          setTimeout(showAnimatedText, typingDelay);
+        } else {
+          setTimeout(erase, deletingDelay);
+        }
+      }
+      function erase() {
+        if (charIndex >= 0) {
+          textElement.textContent = names[index].slice(0, charIndex);
+          setTimeout(erase, deletingDelay);
+          charIndex--;
+        } else {
+          charIndex = 0;
+          index++;
+          if (index > names.length - 1) {
+            index = 0;
+          }
+          setTimeout(showAnimatedText, newWordDelay);
+        }
+      }
+      // document.addEventListener("DOMContentLoaded", showAnimatedText);
+      // showAnimatedText();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(showAnimatedText, newWordDelay + newWordDelay);
+      });
+    </script>
+  </body>
+</html>
